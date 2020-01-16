@@ -1,5 +1,6 @@
 package com.rioapp.demo.imeiplugin;
 
+import java.math.BigInteger;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -59,10 +60,14 @@ public class ImeiPlugin implements MethodCallHandler, PluginRegistry.RequestPerm
             }else if (ContextCompat.checkSelfPermission((activity), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
                 TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    if(telephonyManager.getPhoneCount() == 2){
+                        result.success(telephonyManager.getImei(0)+","+telephonyManager.getImei(1));
+                    }
                     result.success( telephonyManager.getImei() );
-                else
+                }else{
                     result.success( telephonyManager.getDeviceId() );
+                }
 
             } else {
 
